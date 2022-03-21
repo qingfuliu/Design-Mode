@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-15 22:21:39
- * @LastEditTime: 2022-03-17 19:20:40
+ * @LastEditTime: 2022-03-18 18:12:49
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \Design Mode\单例模式\SingLeton.h
@@ -23,7 +23,7 @@ public:
         //双层判空  可以预防高并发模式下线程对锁争抢，减少上下文切换
         if (instance == nullptr)
         {
-            std::lock_guard<std::mutex> Lock(m_mutex);
+            // std::lock_guard<std::mutex> Lock(m_mutex);
             if (instance == nullptr)
             {
                 instance = new SingLeton;
@@ -35,7 +35,7 @@ public:
 private:
     SingLeton() {} ///在此实例化自己
     static SingLeton *instance;
-    static std::mutex m_mutex;
+    // static std::mutex m_mutex;
 };
 
 class SingLeton2
@@ -56,3 +56,37 @@ public:
 };
 
 
+//模板单例模式 陈硕muduo网络库
+template<class T>
+class SingLetonT{
+public:
+    SingLetonT(const SingLetonT&)=delete;
+    SingLetonT(const SingLetonT&&)=delete;
+    SingLetonT& operator=(const SingLetonT&)=delete;
+    SingLetonT& operator=(SingLetonT&&)=delete;
+    static T& getInstance(){
+        static T instance;
+        return intance;
+
+        // if(m_instance==nullptr){
+        //     std::lock_guard<std::mutex>Lock(m_mutex);
+        //     if(m_instance==nullptr){
+        //         m_instance.reset(new T);
+        //     }
+        // }
+        // return *m_instance;
+    }
+private:
+    // static std::unique_ptr<T>m_instance;
+    // static std::mutex m_mutex;
+};
+// template<class T>
+// std::unique_ptr<T> SingLetonT<T>::m_instance;
+// template<class T>
+// std::mutex SingLetonT<T>::m_mutex;
+class Example{
+public:
+    void aaa9();
+};
+
+// SingLetonT<Example>::getInstance();
